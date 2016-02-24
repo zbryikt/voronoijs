@@ -1,0 +1,64 @@
+if use.og
+  meta(property="og:locale",content="zh_TW")
+  meta(property="og:image",content="#{thumbnail}")
+  meta(property="og:image:type",content="image/png")
+  meta(property="og:image:width",content="200")
+  meta(property="og:image:height",content="200")
+  meta(name="twitter:card",content=og.twitter.type)
+  meta(name="twitter:site",content=og.twitter.site)
+  meta(name="twitter:domain",content=og.domain)
+  meta(name="twitter:url",content=og.url)
+  meta(name="twitter:creator",content=og.twitter.creator)
+  meta(name="twitter:title",content=og.title)
+  meta(name="twitter:description",content=og.description)
+  meta(name="twitter:image:src",content=og.thumbnail.url)
+  meta(property="og:title",content=og.title)
+  meta(property="og:type",content="article")
+  meta(property="og:url",content=og.url)
+  meta(property="og:image",content=og.thumbnail.url)
+  meta(property="og:description",content=og.description)
+  meta(property="og:article:author",content=og.author)
+  meta(property="og:article:section",content=og.section)
+  meta(name="keywords",content=og.keyword)
+
+if use.favicon
+    link(rel="icon",type="image/x-icon",href="#{favicon}")
+if use.cdn
+  //- from cdn
+  if lib.jquery
+    script(type="text/javascript",src="//codeorigin.jquery.com/jquery-1.10.2.min.js")
+  if lib.d3js
+    script(type="text/javascript",src="//cdnjs.cloudflare.com/ajax/libs/d3/3.5.4/d3.min.js")
+  if lib.angular
+    script(type="text/javascript",src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.3/angular.min.js")
+  if lib.bootstrap
+    link(rel="stylesheet",type="text/css",href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css")
+    script(type="text/javascript",src="//netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js")
+  if lib.semantic
+    link(rel="stylesheet",type="text/css",href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/0.9.3/css/semantic.min.css")
+    script(type="text/javascript",src="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/0.9.3/javascript/semantic.min.js")
+  if lib.fontawesome
+    link(rel="stylesheet",href="//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css")
+  if lib.reactjs
+    script(type="text/javascript",src="//cdnjs.cloudflare.com/ajax/libs/react/0.14.0/react.js")
+    script(type="text/javascript",src="//cdnjs.cloudflare.com/ajax/libs/react/0.14.0/react-dom.js")
+else
+  //- from local
+  if lib.jquery
+    script(type="text/javascript",src="#{assets}/jquery/1.10.2/jquery.min.js")
+  if lib.d3js
+    script(type="text/javascript",src="#{assets}/d3js/3.5.4/d3.min.js")
+  if lib.angular
+    script(type="text/javascript",src="#{assets}/angular/1.2.3/angular.min.js")
+  if lib.bootstrap
+    link(rel="stylesheet",type="text/css",href="#{assets}/bootstrap/3.0.2/css/bootstrap.min.css")
+    script(type="text/javascript",src="#{assets}/bootstrap/3.0.2/js/bootstrap.min.js")
+  if lib.semantic
+    link(rel="stylesheet",type="text/css",href="#{assets}/semantic-ui/0.9.5/css/semantic.min.css")
+    script(type="text/javascript",src="#{assets}/semantic-ui/0.9.5/js/semantic.min.js")
+  if lib.fontawesome
+    link(rel="stylesheet",type="text/css",href="#{assets}/fontawesome/4.4.0/css/font-awesome.min.css")
+  if lib.reactjs
+    script(type="text/javascript",src="#{assets}/reactjs/0.14.0/react.js")
+    script(type="text/javascript",src="#{assets}/reactjs/0.14.0/react-dom.js")
+
