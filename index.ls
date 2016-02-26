@@ -68,47 +68,13 @@ render = ->
 
 
 makedata = (lv = 0) ->
-  len = parseInt(Math.random! * 10) + 2
-  if lv >= 2 => return {value: (Math.random!*100 + 5), name: Math.random!}
+  len = parseInt(Math.random! * 15) + 2
+  if lv >= 2 => return {value: (Math.random!*200 + 30), name: Math.random!}
   children = [makedata(lv + 1) for i from 0 til len]
   value = children.reduce(((a,b) -> a + b.value),0)
   return {children, value}
 data = makedata!
-/*
-data = {
-  children: [
-    {
-      value: 270
-      children: [
-        * value: 70
-        * value: 100
-        * value: 200
-        * value: Math.random! * 250
-        * value: Math.random! * 250
-        * value: Math.random! * 250
-        * value: Math.random! * 250
-        * value: Math.random! * 250
-      ]
-    },
-    {
-      value: 360
-      children: [
-        * value: 10
-        * value: 50
-        * value: 300
-      ]
-    },
-    {
-      value: 90
-      children: [
-        * value: 20
-        * value: 30
-        * value: 40
-      ]
-    },
-  ]
-}
-*/
+
 if true =>
   treemap = new Voronoi.Treemap( data, Polygon.create(width, height, 100), width, height )
   <- setInterval _, 10
