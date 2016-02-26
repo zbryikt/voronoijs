@@ -87,7 +87,7 @@ Voronoi.Convex.prototype <<< do
 
   iterate:  ->
     if @idx >= @pts.length => return
-    faces = @get-pair idx
+    faces = @get-pair-by-ptr @idx
     edges = []
     for f in faces => 
       #f.removed => continue
