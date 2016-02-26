@@ -1,6 +1,6 @@
 
 Voronoi.Convex = (pts) ->
-  @ <<< {pts, polygons: []}
+  @ <<< {pts, polygons: [], edges: {}}
   @pair = f2p: {}, p2f: {}
   @faces.list = []
   if @pts.length < 4 => return
@@ -58,21 +58,18 @@ Voronoi.Convex.prototype <<< do
       
 
   grid: ->
-    @faces.list = @faces.list.filter -> !it.removed
     @faces.list.for-each -> it <<< {center: it.get-center!}
+    @faces.list = @faces.list.filter -> !it.removed and it.front(it.center)
     @polygons = []
     for p in @pts => p.visited = false
     visited = []
     for face in @faces.list =>
-      if !face.front(face.center) => continue
       for p in face.idx
         if p in visited => continue
         visited.push p
         polygon = []
         polygon.idx = p
-        for f,i in @faces.list =>
-          if !f.front(f.center) => continue
-          if p in f.idx => polygon.push f.dual!
+        for f,i in @faces.list => if p in f.idx => polygon.push f.dual!
         @polygon-reorder polygon
         polygon.cx = polygon.reduce(((a,b) -> a + b.x),0) / polygon.length
         polygon.cy = polygon.reduce(((a,b) -> a + b.y),0) / polygon.length
@@ -89,12 +86,10 @@ Voronoi.Convex.prototype <<< do
     edges = []
     for f in faces => 
       continue if f.removed
-      for i from 0 til 3 =>
-        edge = {} <<< {dup: false, node: [f.idx[i], f.idx[(i + 1)% 3]]}
-        if edge.node.0 > edge.node.1 => edge.node.reverse!
-        dupes = edges.filter(-> it.node.0 == edge.node.0 and it.node.1 == edge.node.1).map -> it <<< dup: true
-        if !dupes.length => edges.push edge
-    horizon = edges.filter(-> !it.dup ).map -> it.node
+      for edge in f.edges =>
+        if !edge.ref => edges.push edge else edge.dup = true
+        edge.ref++
+    horizon = edges.filter(-> it.ref < 2)
     faces.map -> it.removed = true
     @faces.add newfaces = [new Voronoi.face(@, (edge ++ [@idx]), true) for edge in horizon]
     newfaces.for-each (f,i) ~> @pts.for-each (p,i) ~> if f.front(p) => @set-pair f, p

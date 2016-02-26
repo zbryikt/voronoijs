@@ -10,8 +10,12 @@ Voronoi.face = (convex, idx, active = false) ->
   if ip > 0 => 
     <[x y z]>.for-each ~> @norm[it] = -@norm[it]
     @pts.reverse!
-    @idx.reverse!
+    idx.reverse!
   else if ip == 0 => @trivial = true
+  @edges = for i from 0 til 3 =>
+    j = (i + 1 ) % 3
+    [p,q] = if idx[i] > idx[j] => [idx[j],idx[i]] else [idx[i],idx[j]]
+    (if convex.edges{}[p][q] => that else convex.edges{}[p][q] = [p, q]) <<< ref: 0
   @
 
 Voronoi.face.prototype <<< do

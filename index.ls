@@ -33,7 +33,7 @@ render = ->
     * x: 10, y: height - 10
   ]
 
-  seg = 60
+  seg = 20
   omega = [{
     x: ((width/2) + (width/2) * Math.cos(Math.PI * 2 * i / seg)) * 1
     y: ((height/2) + (height/2) * Math.sin(Math.PI * 2 * i / seg)) * 1
@@ -146,10 +146,19 @@ points = []
 convex = null
 sites = []
 sites = [{
-  x: (width / 4) + (width / 2) * Math.random!
-  y: (height / 4) + (height / 2) * Math.random!
+  x: (width) * Math.random!
+  y: (height) * Math.random!
   value: 30 + Math.random!* 30
-} for i from 0 til 50].map -> reZ it
+} for i from 0 til 100].map -> reZ it
+
+/*
+sites = [
+  * x: 100, y: 400, value: 30
+  * x: 200, y: 300, value: 30
+  * x: 300, y: 200, value: 30
+  * x: 400, y: 100, value: 30
+].map reZ
+*/
 
 elapsed = [0,0,0,0,0]
 elapsed-count = 0
@@ -179,7 +188,7 @@ setTimeout (->
   start := true
   setInterval (-> 
     calc!
-  ),200
+  ),50
 ), 200
 /*setInterval (-> 
   convex := new Convex points
