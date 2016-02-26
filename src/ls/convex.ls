@@ -1,6 +1,7 @@
 
 Voronoi.Convex = (pts) ->
   @ <<< {pts, polygons: [], edges: {}}
+  @pts.for-each -> it.z = it.x ** 2 + it.y **2 - it.weight
   @pair = f2p: {}, p2f: {}
   @faces.list = []
   if @pts.length < 4 => return

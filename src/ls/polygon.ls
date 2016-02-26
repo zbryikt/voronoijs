@@ -48,3 +48,10 @@ Polygon.intersect = (ply1, ply2) ->
     while idx != start.1
     ply2 = new-polygon
   ply2
+
+Polygon.create = (width, height, side) ->
+  if side < 3 => side = 3
+  [{
+    x: ((width/2) + (width/2) * Math.cos(Math.PI * 2 * i / side)) * 1
+    y: ((height/2) + (height/2) * Math.sin(Math.PI * 2 * i / side)) * 1
+  } for i from 0 til side]
