@@ -1,13 +1,10 @@
 
 <- $ document .ready
 nearlyzero = 0.0000000001
-
 reZ = -> it <<< z: it.x ** 2 + it.y ** 2 - it.value
-normAll = -> 
-  max = d3.max sites.map -> it.value
-  sites.for-each -> it.value = ( it.value / max ) * width
-  sites.map reZ
-
+av = 0
+all-value = -> av := sites.reduce(((a,b) -> a + b.data),0)
+alpha = 1
 
 box = document.getElementById(\bound).getBoundingClientRect!
 width = box.width
@@ -36,10 +33,16 @@ omega = [{
   x: ((width/2) + (width/2) * Math.cos(Math.PI * 2 * i / seg)) * 1
   y: ((height/2) + (height/2) * Math.sin(Math.PI * 2 * i / seg)) * 1
 } for i from 0 til seg]
+area-omega = Polygon.area omega
+polygons = []
+centers = []
+
+clip = ->
+  polygons := convex.polygons
+  polygons := polygons.map -> Voronoi.Polygon.intersect omega, it
 
 render = ->
-  polygons = convex.polygons
-  polygons = polygons.map -> Voronoi.Polygon.intersect omega, it
+
   /*
 
   seg = 60
@@ -93,46 +96,60 @@ render = ->
     .attr do
       cx: -> xscale it.x
       cy: -> yscale it.y
-      r: ->  Math.sqrt(it.value)
+      r: -> Math.sqrt(it.data) # Math.sqrt(it.value)
         #rscale Math.sqrt(it.value)
       fill: \#fff
       stroke: \#000
-      opacity: -> 1
+      opacity: -> 0.1
     .on \click, (d,i) -> 
+      alpha := 1
       p = sites[i]
-      p.value = (Math.sqrt(p.value) + 10 ) ** 2
-      p.z = p.x ** 2 + p.y ** 2 - p.value
-      #normAll!
+      p.data = (Math.sqrt(p.data) + 10 ) ** 2
+      p.value = p.data
+      for i from 0 til sites.length => 
+        sites[i].value = sites[i].data
+        reZ sites[i]
+      all-value!
+      reZ p
+      #p.z = p.x ** 2 + p.y ** 2 - p.value
       calc!
       d3.event.preventDefault!
       d3.event.stopPropagation!
       d3.returnValue = false
       d3.cancelBubble = true
 
-  if start =>
-    centers = polygons.map -> Voronoi.Polygon.center it
-    for i from 0 til centers.length - 4 =>
-      if sites[i] and polygons[i].length and !sites[i].boundary => 
-        sites[i].x += (centers[i].x - sites[i].x) * 0.01
-        sites[i].y += (centers[i].y - sites[i].y) * 0.01
-        reZ sites[i]
-  #for i from 0 til points.length => points[i] <<< sites[i]
-  #xrange = d3.extent points.map -> it.x
-  #yrange = d3.extent points.map -> it.y
   /*
-  for i from 0 til points.length =>
-    p = points[i]
-    p.x = ( p.x - xrange.0 ) / (xrange.1 - xrange.0)
-    p.y = ( p.y - yrange.0 ) / (yrange.1 - yrange.0)
-    p.x = (p.x * 2 - 1) * 150
-    p.y = (p.y * 2 - 1) * 150
-    p.z = p.x **2 + p.y ** 2 - p.value
+  centers = polygons.map -> Voronoi.Polygon.center it
+  for i from 0 til centers.length - 4 =>
+    if !sites[i] or !polygons[i].length or sites[i].boundary => continue
+    sites[i].x = centers[i].x
+    sites[i].y = centers[i].y
   */
-  #console.log "normalized x/y range:" , d3.extent(points.map -> it.x), d3.extent(points.map -> it.y)
+  /*
+  for i from 0 til centers.length - 4 =>
+    if !sites[i] or !polygons[i].length or sites[i].boundary => continue
+    a = Polygon.area polygons[i]
+    drate = (sites[i].data) / av
+    target-area = area-omega * drate
+    current-area = a
+
+    v = Math.sqrt(v) * target-area / current-area
+    min = -1
+    for j from 0 til centers.length =>
+      if i == j => continue
+      d = Math.sqrt((centers[j].x - sites[i].x) ** 2 + (centers[j].y - sites[i].y) ** 2)
+      if min == -1 or min > d => min = d
+    v = d3.min([v, min])**2
+    if v < nearlyzero => v = nearlyzero
+    sites[i].value = v
+    reZ sites[i]
+  */
 
 svg.on \click, ->
+  alpha := 1
   [x, y] = [d3.event.clientX - box.left, d3.event.clientY - box.top]
-  sites.push reZ {x, y, value: 30}
+  sites.push reZ {x, y, value: 30, data: 30}
+  all-value!
   calc!
 
 float-site = []
@@ -148,52 +165,81 @@ sites = []
 sites = [{
   x: (width) * Math.random!
   y: (height) * Math.random!
-  value: 30 + Math.random!* 30
-} for i from 0 til 100].map -> reZ it
+  value: 1 + Math.random!* 600
+} for i from 0 til 100].map -> 
+  it.data = it.value
+  reZ it
 
-/*
-sites = [
-  * x: 100, y: 400, value: 30
-  * x: 200, y: 300, value: 30
-  * x: 300, y: 200, value: 30
-  * x: 400, y: 100, value: 30
-].map reZ
-*/
+all-value!
 
-elapsed = [0,0,0,0,0]
-elapsed-count = 0
 calc = ->
-  t1 = new Date!getTime!
-  points := JSON.parse(JSON.stringify(sites ++ float-site ++ boundary))
-  t2 = new Date!getTime!
-  convex := new Voronoi.Convex points
-  t3 = new Date!getTime!
-  while convex.idx < convex.pts.length => convex.iterate!
-  t4 = new Date!getTime!
-  convex.grid!
-  t5 = new Date!getTime!
-  render!
-  t6 = new Date!getTime!
-  elapsed.0 = elapsed.0 + (t2 - t1)
-  elapsed.1 = elapsed.1 + (t3 - t2)
-  elapsed.2 = elapsed.2 + (t4 - t3)
-  elapsed.3 = elapsed.3 + (t5 - t4)
-  elapsed.4 = elapsed.4 + (t6 - t5)
-  elapsed-count := elapsed-count + 1
-  console.log elapsed.map(-> parseInt(it / elapsed-count)).join(" ")
-calc!
 
-start = false
+  for i from 0 til centers.length - 4 =>
+    if !sites[i] or !polygons[i].length or sites[i].boundary => continue
+    /*sites[i].x = centers[i].x
+    sites[i].y = centers[i].y*/
+
+    v = Math.sqrt(sites[i].value)
+    min = -1
+    for j from 0 til polygons[i].length =>
+      p = polygons[i][j]
+      q = polygons[i][(j + 1) % polygons[i].length]
+      distance = Math.abs(
+        ((q.y - p.y) * sites[i].x - (q.x - p.x) * sites[i].y + q.x * p.y - q.y * p.x) /
+        Math.sqrt((q.y - p.y) ** 2 + (q.x - p.x) ** 2)
+      )
+      if min == -1 or min > distance => min = distance
+    v = Math.min(v, min) ** 2
+    sites[i].value = v
+    reZ sites[i]
+
+  points := JSON.parse(JSON.stringify(sites ++ float-site ++ boundary ))
+  convex := new Voronoi.Convex points
+  convex.calculate!
+  clip!
+
+  for i from 0 til centers.length - 4 =>
+    if !sites[i] or !polygons[i].length or sites[i].boundary => continue
+    v = sites[i].value
+    a = Polygon.area polygons[i]
+    drate = (sites[i].data) / av
+    target-area = area-omega * drate
+    current-area = a
+
+    u = Math.sqrt(v)
+    v = Math.sqrt(v) * target-area / current-area
+    min = -1
+    for j from 0 til centers.length =>
+      if i == j => continue
+      d = Math.sqrt((centers[j].x - sites[i].x) ** 2 + (centers[j].y - sites[i].y) ** 2)
+      if min == -1 or min > d => min = d
+    v = Math.min(v, min) ** 2
+    if v < nearlyzero => v = nearlyzero
+    #sites[i].value += (v - sites[i].value) * alpha
+    sites[i].value = v
+    reZ sites[i]
+
+  points := JSON.parse(JSON.stringify(sites ++ float-site ++ boundary ))
+  convex := new Voronoi.Convex points
+  convex.calculate!
+  clip!
+  centers := polygons.map -> Voronoi.Polygon.center it
+  for i from 0 til centers.length - 4 =>
+    if !sites[i] or !polygons[i].length or sites[i].boundary => continue
+    sites[i].x = centers[i].x
+    sites[i].y = centers[i].y
+  render!
+
+points := JSON.parse(JSON.stringify(sites ++ float-site ++ boundary ))
+convex := new Voronoi.Convex points
+convex.calculate!
+centers := polygons.map -> Voronoi.Polygon.center it
+clip!
+render!
+
 setTimeout (->
-  start := true
   setInterval (-> 
     calc!
-  ),100
+    alpha := alpha * 0.99
+  ),10
 ), 200
-/*setInterval (-> 
-  convex := new Convex points
-  convex.calculate!
-  render!
-), 1000
-*/
-
