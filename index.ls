@@ -149,7 +149,7 @@ sites = [{
   x: (width) * Math.random!
   y: (height) * Math.random!
   value: 30 + Math.random!* 30
-} for i from 0 til 100].map -> reZ it
+} for i from 0 til 300].map -> reZ it
 
 /*
 sites = [
@@ -188,7 +188,7 @@ setTimeout (->
   start := true
   setInterval (-> 
     calc!
-  ),50
+  ),200
 ), 200
 /*setInterval (-> 
   convex := new Convex points

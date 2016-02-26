@@ -1,14 +1,22 @@
 
 Voronoi.face = (convex, idx, active = false) ->
   @ <<< {convex, idx, active, removed: false}
-  @pts = idx.map ~> convex.pts[it]
-  @norm = Aux.cross(Aux.sub(@pts.2, @pts.0), Aux.sub(@pts.1, @pts.0))
-  len = <[x y z]>.reduce(((a,b) ~> a + @norm[b]**2),0)
-  @norm = { x: @norm.x / len, y: @norm.y / len, z: @norm.z / len }
-  @front = (p) -> Aux.inner(@norm, Aux.sub(p, @pts.0)) > 0
-  ip = Aux.inner(@norm, Aux.sub(convex.center, @pts.0)) 
+  @pts = [p0,p1,p2] = [convex.pts[idx.0], convex.pts[idx.1], convex.pts[idx.2]]
+  c = convex.center
+  [x1,y1,z1] = [p2.x - p0.x, p2.y - p0.y, p2.z - p0.z]
+  [x2,y2,z2] = [p1.x - p0.x, p1.y - p0.y, p1.z - p0.z]
+  @norm = n = do # cross product
+    x: y1 * z2 - z1 * y2
+    y: z1 * x2 - x1 * z2
+    z: x1 * y2 - y1 * x2
+  len = n.x ** 2 + n.y ** 2 + n.z ** 2
+  @norm = n = do
+    x: n.x / len
+    y: n.y / len
+    z: n.z / len
+  ip = n.x * (c.x - p0.x) + n.y * (c.y - p0.y) + n.z * (c.z - p0.z) #inner product
   if ip > 0 => 
-    <[x y z]>.for-each ~> @norm[it] = -@norm[it]
+    [n.x, n.y, n.z] = [-n.x, -n.y, -n.z]
     @pts.reverse!
     idx.reverse!
   else if ip == 0 => @trivial = true
@@ -16,9 +24,14 @@ Voronoi.face = (convex, idx, active = false) ->
     j = (i + 1 ) % 3
     [p,q] = if idx[i] > idx[j] => [idx[j],idx[i]] else [idx[i],idx[j]]
     (if convex.edges{}[p][q] => that else convex.edges{}[p][q] = [p, q]) <<< ref: 0
+  @precal = ( n.x * p0.x + n.y * p0.y + n.z * p0.z ) # speedup calculation of front inner product
   @
 
 Voronoi.face.prototype <<< do
+  front: (p) ->
+    n = @norm
+    n.x * p.x + n.y * p.y + n.z * p.z - @precal > 0
+
   get-center: ->
     [ret,len] = [{x: 0, y: 0}, @pts.length]
     @pts.for-each ~> [ret.x,ret.y] = [ret.x + it.x, ret.y + it.y]

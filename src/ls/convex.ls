@@ -23,16 +23,20 @@ Voronoi.Convex = (pts) ->
     initset.splice initset.indexOf(idx), 1
     initset.push @idx
   @faces.add faces
-  faces.for-each (f,i) ~> @pts.for-each (p,i) ~> if f.front(p) => @set-pair f, p
+  faces.for-each (f,i) ~> @pts.for-each (p,j) ~> if f.front(p) => @set-pair i, j, f, p
   @
 
 Voronoi.Convex.prototype <<< do
   get-pair-by-ptr: (idx) -> @pair.p2f[idx] or []
   get-pair-by-face: (idx) -> @pair.f2p[idx] or []
 
-  set-pair: (f,p) ->
-    @pair.{}f2p[][@faces.list.indexOf(f)].push p
-    @pair.{}p2f[][@pts.indexOf(p)].push f
+  #set-pair: (f,p) ->
+  #  @pair.{}f2p[][@faces.list.indexOf(f)].push p
+  #  @pair.{}p2f[][@pts.indexOf(p)].push f
+
+  set-pair: (fi,pi,f,p) ->
+    @pair.{}f2p[][fi].push p
+    @pair.{}p2f[][pi].push f
 
   faces: do
     contain: -> it in @list
@@ -75,12 +79,14 @@ Voronoi.Convex.prototype <<< do
         polygon.cy = polygon.reduce(((a,b) -> a + b.y),0) / polygon.length
         if @pts[p].boundary => polygon.boundary = true
         @polygons.push polygon
+    console.log @e1, @e2, @e3
 
   calculate: -> 
     while @idx < @pts.length => @iterate!
     @grid!
 
   iterate:  ->
+    t1 = new Date!getTime!
     if @idx >= @pts.length => return
     faces = @get-pair-by-ptr @idx
     edges = []
@@ -91,7 +97,22 @@ Voronoi.Convex.prototype <<< do
         edge.ref++
     horizon = edges.filter(-> it.ref < 2)
     faces.map -> it.removed = true
+    t2 = new Date!getTime!
     @faces.add newfaces = [new Voronoi.face(@, (edge ++ [@idx]), true) for edge in horizon]
-    newfaces.for-each (f,i) ~> @pts.for-each (p,i) ~> if f.front(p) => @set-pair f, p
+    [pts, pair, idx, flen, plen, nlen] = [@pts, @pair, @idx, @faces.list.length, @pts.length, newfaces.length]
+    t3 = new Date!getTime!
+    newfaces.for-each (f,i) ~>
+      i += flen - nlen
+      for j from idx + 1 til plen # @pts.length
+        p = pts[j]
+        if f.front(p) =>
+          pair.f2p[][i].push p
+          pair.p2f[][j].push f
+
     @idx++
+    t4 = new Date!getTime!
+    #console.log ">", (t2 - t1), (t3 - t2), (t4 - t3)
+    @e1 = (if @e1? => that else 0) + (t2 - t1)
+    @e2 = (if @e2? => that else 0) + (t3 - t2)
+    @e3 = (if @e3? => that else 0) + (t4 - t3)
 
