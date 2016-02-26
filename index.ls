@@ -24,21 +24,21 @@ boundary = [
   * x: 2 * width, y: 2 * height, boundary: true
 ].map(-> it <<< {boundary: true, value: nearlyzero}).map reZ
 
+
+omega = [
+  * x: 10, y: 10
+  * x: width - 10, y: 10
+  * x: width - 10, y: height - 10
+  * x: 10, y: height - 10
+]
+seg = 20
+omega = [{
+  x: ((width/2) + (width/2) * Math.cos(Math.PI * 2 * i / seg)) * 1
+  y: ((height/2) + (height/2) * Math.sin(Math.PI * 2 * i / seg)) * 1
+} for i from 0 til seg]
+
 render = ->
   polygons = convex.polygons
-  omega = [
-    * x: 10, y: 10
-    * x: width - 10, y: 10
-    * x: width - 10, y: height - 10
-    * x: 10, y: height - 10
-  ]
-
-  seg = 20
-  omega = [{
-    x: ((width/2) + (width/2) * Math.cos(Math.PI * 2 * i / seg)) * 1
-    y: ((height/2) + (height/2) * Math.sin(Math.PI * 2 * i / seg)) * 1
-  } for i from 0 til seg]
-
   polygons = polygons.map -> Voronoi.Polygon.intersect omega, it
   /*
 
@@ -149,7 +149,7 @@ sites = [{
   x: (width) * Math.random!
   y: (height) * Math.random!
   value: 30 + Math.random!* 30
-} for i from 0 til 300].map -> reZ it
+} for i from 0 til 100].map -> reZ it
 
 /*
 sites = [
@@ -188,7 +188,7 @@ setTimeout (->
   start := true
   setInterval (-> 
     calc!
-  ),200
+  ),100
 ), 200
 /*setInterval (-> 
   convex := new Convex points

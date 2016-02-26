@@ -79,7 +79,7 @@ Voronoi.Convex.prototype <<< do
         polygon.cy = polygon.reduce(((a,b) -> a + b.y),0) / polygon.length
         if @pts[p].boundary => polygon.boundary = true
         @polygons.push polygon
-    console.log @e1, @e2, @e3
+    #console.log @e1, @e2, @e3
 
   calculate: -> 
     while @idx < @pts.length => @iterate!
