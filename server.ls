@@ -250,6 +250,19 @@ update-file = ->
   if type == \ls =>
     if /src\/ls/.exec src =>
       try
+        des = src.replace(/src\/ls/, "static/js").replace(/\.ls$/, ".js")
+        try
+          mkdir-recurse path.dirname(des)
+          fs.write-file-sync(
+            des,
+            uglify.minify(lsc.compile(fs.read-file-sync(src)toString!,{bare:true}),{fromString:true}).code
+          )
+          console.log "[BUILD] #src --> #des"
+        catch
+          console.log "[BUILD] #src failed: "
+          console.log e.message
+        return
+
         files = fs.readdir-sync \src/ls/ .map -> "src/ls/#it"
         files = files.filter -> (/\/\./.exec it) == null
         result = [uglify.minify(lsc.compile(fs.read-file-sync(file)toString!,{bare:true}),{fromString:true}).code for file in files].join("")

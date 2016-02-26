@@ -26,10 +26,18 @@ html(lang="en")
     include library.jade
     // custom files
     link(rel="stylesheet",type="text/css",href="index.css")
-    script(type="text/javascript",src="main.js")
+    //script(type="text/javascript",src="main.js")
+    script(type="text/javascript",src="static/js/voronoi.js")
+    script(type="text/javascript",src="static/js/polygon.js")
+    script(type="text/javascript",src="static/js/face.js")
+    script(type="text/javascript",src="static/js/convex.js")
     script(type="text/javascript",src="index.js")
   body
-    .container(style="")
-      svg#svg(style="width:100%;height:100%;",preserveAspectRatio="xMidYMid")
-    .container(style="margin-top: 25px;padding:0")
-      svg#svg2(width="100%", height="100%", preserveAspectRatio="xMidYMid")
+    #bound
+      svg#svg(preserveAspectRatio="xMidYMid")
+      //-svg#svg(style="width:100%;height:100%;",preserveAspectRatio="xMidYMid")
+    //-
+      .container(style="margin-top: 25px;padding:0")
+        svg#svg2(width="100%", height="100%", preserveAspectRatio="xMidYMid")
+      .container(style="margin-top: 25px;padding:0")
+        svg#svg3(width="100%", height="100%", preserveAspectRatio="xMidYMid")

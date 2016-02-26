@@ -1,0 +1,1 @@
+var Voronoi,Aux;Voronoi={},Aux={inner:function(n,r){return["x","y","z"].map(function(u){return n[u]*r[u]}).reduce(function(n,r){return n+r},0)},sub:function(n,r){var u;return u={},["x","y","z"].map(function(o){return u[o]=n[o]-r[o]}),u},cross:function(n,r){return{x:n.y*r.z-n.z*r.y,y:n.z*r.x-n.x*r.z,z:n.x*r.y-n.y*r.x}}};
