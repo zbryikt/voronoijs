@@ -103,15 +103,15 @@ Voronoi.Convex.prototype <<< do
     t3 = new Date!getTime!
     newfaces.for-each (f,i) ~>
       i += flen - nlen
+      [n,precal] = [f.norm, f.precal]
       for j from idx + 1 til plen # @pts.length
         p = pts[j]
-        if f.front(p) =>
+        if n.x * p.x + n.y * p.y + n.z * p.z - precal > 0 => # unloop front caculation
           pair.f2p[][i].push p
           pair.p2f[][j].push f
 
     @idx++
     t4 = new Date!getTime!
-    #console.log ">", (t2 - t1), (t3 - t2), (t4 - t3)
     @e1 = (if @e1? => that else 0) + (t2 - t1)
     @e2 = (if @e2? => that else 0) + (t3 - t2)
     @e3 = (if @e3? => that else 0) + (t4 - t3)
