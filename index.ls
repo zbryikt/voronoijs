@@ -25,7 +25,6 @@ boundary = [
 ].map(-> it <<< {boundary: true, value: nearlyzero}).map reZ
 
 render = ->
-  start-time = new Date!getTime!
   polygons = convex.polygons
   omega = [
     * x: 10, y: 10
@@ -130,8 +129,6 @@ render = ->
     p.z = p.x **2 + p.y ** 2 - p.value
   */
   #console.log "normalized x/y range:" , d3.extent(points.map -> it.x), d3.extent(points.map -> it.y)
-  end-time = new Date!getTime!
-  console.log "render elapsed: ", end-time - start-time
 
 svg.on \click, ->
   [x, y] = [d3.event.clientX - box.left, d3.event.clientY - box.top]
@@ -149,10 +146,10 @@ points = []
 convex = null
 sites = []
 sites = [{
-  x: Math.random! * width
-  y: Math.random! * width
+  x: (width / 4) + (width / 2) * Math.random!
+  y: (height / 4) + (height / 2) * Math.random!
   value: 30 + Math.random!* 30
-} for i from 0 til 10].map -> reZ it
+} for i from 0 til 20].map -> reZ it
 
 calc = ->
   t1 = new Date!getTime!
@@ -175,7 +172,7 @@ setTimeout (->
   setInterval (-> 
     calc!
   ),100
-), 2000
+), 200
 /*setInterval (-> 
   convex := new Convex points
   convex.calculate!

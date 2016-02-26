@@ -1,11 +1,11 @@
 
 Voronoi.face = (convex, idx, active = false) ->
-  @ <<< {convex, idx, active}
+  @ <<< {convex, idx, active, removed: false}
   @pts = idx.map ~> convex.pts[it]
   @norm = Aux.cross(Aux.sub(@pts.2, @pts.0), Aux.sub(@pts.1, @pts.0))
   len = <[x y z]>.reduce(((a,b) ~> a + @norm[b]**2),0)
   @norm = { x: @norm.x / len, y: @norm.y / len, z: @norm.z / len }
-  @front = (p) -> Aux.inner(@norm, Aux.sub(p, @pts.0)) > 0
+
   ip = Aux.inner(@norm, Aux.sub(convex.center, @pts.0)) 
   if ip > 0 => 
     <[x y z]>.for-each ~> @norm[it] = -@norm[it]
@@ -15,10 +15,12 @@ Voronoi.face = (convex, idx, active = false) ->
   @
 
 Voronoi.face.prototype <<< do
-  get-center: ->
+  get-center: -> 
     [ret,len] = [{x: 0, y: 0}, @pts.length]
     @pts.for-each ~> [ret.x,ret.y] = [ret.x + it.x, ret.y + it.y]
     ret <<< {x: ret.x / len, y: ret.y / len, z: -100}
+
+  front: (p) -> Aux.inner( @norm, Aux.sub(p, @pts.0) ) > 0
   dual: ->
     if @dual.value => @dual.value
     {x:x1,y:y1,z:z1} = @pts.0

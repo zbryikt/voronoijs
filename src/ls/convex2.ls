@@ -59,10 +59,10 @@ Voronoi.Convex.prototype <<< do
       
 
   grid: ->
-    @faces.list = @faces.list.filter -> !it.removed
-    @faces.list.for-each -> it <<< {center: it.get-center!}
     @polygons = []
     for p in @pts => p.visited = false
+    @faces.list = @faces.list.filter(-> !it.removed )
+    @faces.list.for-each -> it.center = it.get-center!
     visited = []
     for face in @faces.list =>
       if !face.front(face.center) => continue
@@ -79,6 +79,7 @@ Voronoi.Convex.prototype <<< do
         polygon.cy = polygon.reduce(((a,b) -> a + b.y),0) / polygon.length
         if @pts[p].boundary => polygon.boundary = true
         @polygons.push polygon
+    console.log @pts.length, "vs", @polygons.length
 
   calculate: -> 
     while @idx < @pts.length => @iterate!
@@ -90,7 +91,6 @@ Voronoi.Convex.prototype <<< do
     edges = []
     for f in faces => 
       if f.removed => continue
-      if !(@faces.contain f) => continue
       for i from 0 til 3 =>
         edge = {} <<< {dup: false, node: [f.idx[i], f.idx[(i + 1)% 3]]}
         if edge.node.0 > edge.node.1 => edge.node.reverse!
