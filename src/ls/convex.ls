@@ -1,6 +1,7 @@
 
 Voronoi.Convex = (pts) ->
   @ <<< {pts, polygons: []}
+  @pair = f2p: {}, p2f: {}
   @faces.list = []
   if @pts.length < 4 => return
   [initset,@idx] = [[0 1 2 3], 3]
@@ -26,7 +27,6 @@ Voronoi.Convex = (pts) ->
   @
 
 Voronoi.Convex.prototype <<< do
-  pair: f2p: {}, p2f: {}
   get-pair-by-ptr: (idx) -> @pair.p2f[idx] or []
   get-pair-by-face: (idx) -> @pair.f2p[idx] or []
 
@@ -35,7 +35,6 @@ Voronoi.Convex.prototype <<< do
     @pair.{}p2f[][@pts.indexOf(p)].push f
 
   faces: do
-    list: []
     contain: -> it in @list
     add: -> if Array.isArray(it) => @list ++= it else @list.push it
     remove: (faces) ->
@@ -89,8 +88,7 @@ Voronoi.Convex.prototype <<< do
     faces = @get-pair-by-ptr @idx
     edges = []
     for f in faces => 
-      if f.removed => continue
-      if !(@faces.contain f) => continue
+      continue if f.removed
       for i from 0 til 3 =>
         edge = {} <<< {dup: false, node: [f.idx[i], f.idx[(i + 1)% 3]]}
         if edge.node.0 > edge.node.1 => edge.node.reverse!

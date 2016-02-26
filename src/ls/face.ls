@@ -1,6 +1,6 @@
 
 Voronoi.face = (convex, idx, active = false) ->
-  @ <<< {convex, idx, active}
+  @ <<< {convex, idx, active, removed: false}
   @pts = idx.map ~> convex.pts[it]
   @norm = Aux.cross(Aux.sub(@pts.2, @pts.0), Aux.sub(@pts.1, @pts.0))
   len = <[x y z]>.reduce(((a,b) ~> a + @norm[b]**2),0)

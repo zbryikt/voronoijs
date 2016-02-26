@@ -149,8 +149,10 @@ sites = [{
   x: (width / 4) + (width / 2) * Math.random!
   y: (height / 4) + (height / 2) * Math.random!
   value: 30 + Math.random!* 30
-} for i from 0 til 20].map -> reZ it
+} for i from 0 til 50].map -> reZ it
 
+elapsed = [0,0,0,0,0]
+elapsed-count = 0
 calc = ->
   t1 = new Date!getTime!
   points := JSON.parse(JSON.stringify(sites ++ float-site ++ boundary))
@@ -163,7 +165,13 @@ calc = ->
   t5 = new Date!getTime!
   render!
   t6 = new Date!getTime!
-  console.log (t2 - t1), (t3 - t2), (t4 - t3), (t5 - t4), (t6 - t5)
+  elapsed.0 = elapsed.0 + (t2 - t1)
+  elapsed.1 = elapsed.1 + (t3 - t2)
+  elapsed.2 = elapsed.2 + (t4 - t3)
+  elapsed.3 = elapsed.3 + (t5 - t4)
+  elapsed.4 = elapsed.4 + (t6 - t5)
+  elapsed-count := elapsed-count + 1
+  console.log elapsed.map(-> parseInt(it / elapsed-count)).join(" ")
 calc!
 
 start = false
@@ -171,7 +179,7 @@ setTimeout (->
   start := true
   setInterval (-> 
     calc!
-  ),100
+  ),200
 ), 200
 /*setInterval (-> 
   convex := new Convex points
