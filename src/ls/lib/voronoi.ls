@@ -9,14 +9,13 @@ Aux = do
     z: v1.x * v2.y - v1.y * v2.x
 
 Voronoi.Treemap = (root, omega, width, height, lv = 0) ->
-  @ <<< {root, omega, width, height}
+  @ <<< {root, omega, width, height, lv}
   @sites = [child <<< {
     x: Math.random! * width
     y: Math.random! * height
     lv
   } for child in root.children]
   if lv == 0 => @normalize-value root, Polygon.area(omega), @correct-value(root)
-
   @boundmap = new Voronoi.Boundmap @sites, omega, width, height, true
   @boundmap.compute!
   @treemap = []
@@ -25,10 +24,18 @@ Voronoi.Treemap = (root, omega, width, height, lv = 0) ->
   @
 
 Voronoi.Treemap.prototype = do
+  update-value: ->
+    @normalize-value @root, Polygon.area(@omega), @correct-value(@root)
+    @boundmap = new Voronoi.Boundmap @sites, @omega, @width, @height, true
+    for t in @treemap => t.update-value!
+    @compute!
+
   correct-value: (d) ->
+    if !(d?) => d = @sites
     for item in d.children or [] =>
-    d.value = ([@correct-value(item) for item in (d.children or [])].reduce(((a,b)-> a + b),0)) or d.value or 0
-    d.value
+    d.value = ([@correct-value(item or null) for item in (d.children or [])].reduce(
+      ((a,b)-> a + b),0)
+    ) or d.value or 0
 
   normalize-value: (d, area, value) ->
     d.value = 0.05 * d.value * area / value

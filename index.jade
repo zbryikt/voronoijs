@@ -1,22 +1,22 @@
 doctype html
 //- basic libraries: jquery(1.10.2), d3js(3.5.4), angularjs(1.2.3), bootstrap(3.0)/semantic-ui(0.9.3/0.9.5)
 //-                  fontawesome(4.4.0), reactjs(0.14.0)
-- var use = { cdn: false, og: false, favicon: true }
+- var use = { cdn: false, og: true, favicon: true }
 - var lib = { jquery: true, d3js: true, angular: true, bootstrap: true, semantic: false, fontawesome: true, reactjs: false }
 - var assets = "assets"
-- var favicon = "thumbnail.png"
-- var title = "template"
+- var favicon = "http://zbryikt.github.io/voronoijs/img/favicon.png"
+- var title = "Voronoi.js"
 - var og = {}
 - og.title = title
 - og.twitter = {type: "summary_large_image", site: "@zbryikt", creator: "@zbryikt"}
 - og.domain = "zbryikt.github.io"
-- og.url = ""
-- og.thumbnail = {width: 200, height: 200, type: "image/png"}
-- og.thumbnail.url = "thumbnail.png"
+- og.url = "http://zbryikt.github.io/voronoijs/"
+- og.thumbnail = {width: 1200, height: 630, type: "image/png"}
+- og.thumbnail.url = "http://zbryikt.github.io/voronoijs/img/thumbnail.png"
 - og.author = "zbryikt"
 - og.section = "Taiwan"
-- og.keyword = "zbryikt,template"
-- og.description = ""
+- og.keyword = "zbryikt,voronoi"
+- og.description = "Voronoi Treemap Generator in JavaScript"
 html(lang="en")
   head(prefix="og: http://ogp.me/ns#")
     meta(charset="utf-8")
@@ -25,9 +25,98 @@ html(lang="en")
     // libraries
     include library.jade
     // custom files
+    link(href='https://fonts.googleapis.com/css?family=Lato:300,700',rel='stylesheet',type='text/css')
     link(rel="stylesheet",type="text/css",href="static/css/index.css")
     script(type="text/javascript",src="dist/voronoi.min.js")
     script(type="text/javascript",src="static/js/index.js")
   body
-    #bound
-      svg#svg(preserveAspectRatio="xMidYMid")
+    #root
+      h1.text-center Voronoi.js
+      .text-center a simple, fast and open sourced implementation of Voronoi treemap on web.
+      br
+      #demonstration
+        svg#svg(preserveAspectRatio="xMidYMid")
+      br
+      .text-center: a(href="http://github.com/zbryikt/voronoijs",target="_blank") check it out on Github
+      hr
+      #usage
+        h2 Usage
+        br
+        p First, include #[code: a(href="http://zbryikt.github.io/voronoijs/dist/voronoi.min.js") voronoi.min.js]:
+        pre.well.
+          &#60;script type="text/javascript" src="voronoi.min.js&#62;&#60;/script&#62;
+
+        p initialization: 
+        pre.well.
+          var width = 800, height = 600;
+          var data = {
+            children: [
+              {children: [ {value: 100}, {value: 200}, {value: 300} ]},
+              {children: [ {value: 100}, {value: 500}, {value: 900} ]}
+            ]
+          };
+          var clip = Voronoi.Polygon.create(width, height, 20);
+          var treemap = new Voronoi.Treemap(data, clip, width, height);
+
+        p update and render:
+        pre.well.
+          setInterval(function() {
+            treemap.compute();
+            render();
+          }, 100);
+
+        p Sample renderer with d3.js:
+        pre.well.
+          /* render polygons */
+          d3.selectAll("path").data(treemap.getPolygons())
+          .enter().append("path").attr({
+            d: function(it) { ... }
+          });
+
+          /* render centroid of polygons */
+          d3.selectAll("circle").data(treemap.getSites())
+          .enter().append("circle").attr({
+            cx: function(it) { return it.x; },
+            cy: function(it) { return it.y; },
+            r: function(it) { return Math.sqrt(it.value); }
+          });
+        h3 Sites
+        p You can use these generated attributes in your data to determine how to render:
+        ul
+          li #[code x]: x coordinate
+          li #[code y]: y coordinate
+          li #[code lv]: depth of node in treemap
+        h3 Polygons
+        p Polygon is a point array. For example, a triangle:
+        pre.well.
+          [{x: 0, y: 0}, {x: 100, y: 100}, {x: 200, y: 0}]
+        p Use Voronoi.Polygon.create to quickly generate a N side regular polygon:
+        pre.well.
+          var clipPolygon = Voronoi.Polygon.create(width, height, N);
+        p and use it in Voronoi treemap to indicate the clipping region of the whole treemap:
+        pre.well.
+          var voronoi = new Voronoi.Treemap(data, clipPolygon, width, height);
+        br
+        hr
+        h2 Note
+        p This library is implemented base on this publication:
+        blockquote
+          p Arlind Nocaj and Ulrik Brandes, "Computing Voronoi TreemapsFaster, Simpler, and Resolution-independent", Eurographics Conference on Visualization (EuroVis) 2012
+
+        br
+        hr
+        h2 Author
+        p Kirby T. Wu ( follow on #[a(href="http://twitter.com/zbryikt") twitter] )
+        br
+        hr
+        h2 License
+        p voronoi.js is released under #[a(href="https://raw.githubusercontent.com/zbryikt/voronoijs/master/LICENSE",target="_blank") MIT License].
+        br
+        br
+        hr
+        #footer.text-right
+          a(href="http://github.com/zbryikt/voronoijs") Github
+          a(href="http://twitter.com/zbryikt") #zbryikt
+          a(href="http://zbryikt.github.io/visualize") Vis Projects
+        br
+        br

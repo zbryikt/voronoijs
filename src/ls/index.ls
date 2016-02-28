@@ -1,7 +1,7 @@
 
 <- $ document .ready
 
-box = document.getElementById(\bound).getBoundingClientRect!
+box = document.getElementById(\demonstration).getBoundingClientRect!
 width = box.width
 height = box.height
 svg = d3.select \#svg
@@ -36,7 +36,7 @@ render = ->
         ["L#{xscale it.0.x} #{yscale it.0.y}"].join(" ")
       fill: (d,i) -> 
         if sites[i] and sites[i].lv == 0 => 
-          rgb = d3.rgb(colors sites[i].value)
+          rgb = d3.rgb(colors i)
           "rgba(#{rgb.r},#{rgb.g},#{rgb.b},1.0)"
         else "rgba(0,0,0,0.0)"
       stroke: (d,i) -> \#000
@@ -44,7 +44,13 @@ render = ->
         if sites[i] and sites[i].lv == 0 => return 5 else 1
     .on \mouseover, -> d3.select(@).attr fill: "rgba(0,0,0,0.5)"
     .on \mouseout, -> d3.select(@).attr fill: "rgba(0,0,0,0.1)"
-  svg.selectAll \circle.site .data(sites.filter (d,i) -> polygons[i].length and !d.boundary)
+    .on \click, (d,i) -> 
+      sites[i].value += 1000
+      setTimeout (->
+        treemap.update-value!
+        render!
+      ), 0
+  svg.selectAll \circle.site .data(sites.filter (d,i) -> polygons[i].length and !d.boundary and !d.children)
     ..enter!append \circle .attr class: \site
     ..exit!remove!
   svg.selectAll \circle.site
@@ -56,6 +62,11 @@ render = ->
       stroke: \#000
       opacity: -> 0.1
     .on \click, (d,i) -> 
+      d.value += 1000
+      setTimeout (->
+        treemap.update-value!
+        render!
+      ), 0
       if !boundmap => return
       p = boundmap.sites[i]
       p.value = (Math.sqrt(p.value) + 10 ) ** 2
@@ -70,6 +81,8 @@ render = ->
 makedata = (lv = 0) ->
   len = parseInt(Math.random! * 8) + 2
   if lv == 0 => len = 8
+  if lv == 1 => len = 4
+  if lv == 2 => len = 4
   if lv >= 3 => return {value: (parseInt(Math.random!*2)*100 + 30), name: Math.random!}
   children = [makedata(lv + 1) for i from 0 til len]
   value = children.reduce(((a,b) -> a + b.value),0)
@@ -82,7 +95,7 @@ testdata = children: [c1,c2], value: 8072
 
 if true =>
   treemap = new Voronoi.Treemap( data, Polygon.create(width, height, 100), width, height )
-  <- setInterval _, 100
+  <- setInterval _, 50
   treemap.compute!
   render!
 if false =>
