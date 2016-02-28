@@ -54,4 +54,4 @@ You can use _lv_ to determine depth of the node.
 
 License
 ==========
-[MIT License.](http://raw.githubusercontent.com/zbryikt/voronoi.js/master/LICENSE)
+[MIT License.](http://raw.githubusercontent.com/zbryikt/voronoijs/master/LICENSE)
