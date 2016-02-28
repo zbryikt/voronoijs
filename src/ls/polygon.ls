@@ -1,10 +1,15 @@
 Voronoi.Polygon = Polygon = {}
 
-Polygon.center = (p) ->
+Polygon.centroid = (p) ->
   if !p or !p.length => return {x: NaN, y: NaN}
-  return do
-    x: p.reduce(((a,b) -> a + b.x),0) / p.length
-    y: p.reduce(((a,b) -> a + b.y),0) / p.length
+  len = p.length
+  [cx, cy, a] = [0, 0, 0]
+  for i from 0 til len
+    [u,v] = [p[i], p[(i + 1) % len]]
+    cx += ( u.x + v.x ) * ( u.x * v.y - v.x * u.y )
+    cy += ( u.y + v.y ) * ( u.x * v.y - v.x * u.y )
+    a  += ( u.x * v.y - v.x * u.y ) * 3
+  return { x: cx / a, y: cy / a }
 
 Polygon.area = (p) ->
   (for i from 0 til p.length

@@ -6,8 +6,8 @@ body {
   padding: 0;
 }
 #bound {
-  width: 500px;
-  height: 400px;
+  width: 1000px;
+  height: 800px;
   box-sizing: content-box;
   margin: 20px;
   background: #eee url("/loading.svg") center center no-repeat;

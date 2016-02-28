@@ -28,7 +28,7 @@ Voronoi.Treemap.prototype = do
     (d,i) <~ @treemap.for-each
     d.set-omega @boundmap.polygons[i]
     d.compute!
-  get-sites: -> ([@boundmap.sites] ++ @treemap.map(-> it.sites)).reduce(((a,b) -> a ++ b),[])
+  get-sites: -> ([@boundmap.sites] ++ [[{boundary: true} for i from 0 til 4]] ++ @treemap.map(-> it.get-sites!)).reduce(((a,b) -> a ++ b),[])
   get-polygons: -> ([@boundmap.polygons] ++ @treemap.map -> it.get-polygons!).reduce(((a,b) -> a ++ b),[])
   set-omega: (omega) ->
     @omega = omega
@@ -52,20 +52,22 @@ Voronoi.random-site = (count, width, height, weight) ->
 Voronoi.Boundmap.prototype = do
   clip: ->
     @polygons = @powerbox.convex.polygons.map ~> if it => Voronoi.Polygon.intersect @omega, it else []
-    @centroids = @polygons.map -> if it => Voronoi.Polygon.center it else {x: null, y: null}
+    @centroids = @polygons.map -> if it => Voronoi.Polygon.centroid it else {x: null, y: null}
   adopt-pos: ->
     {sites,centroids,polygons} = @{sites, centroids, polygons}
     for i from 0 til centroids.length - 4 =>
       if !sites[i] or !polygons[i].length or sites[i].boundary => continue
       sites[i].x = centroids[i].x
       sites[i].y = centroids[i].y
+    for i from 0 til centroids.length - 4 =>
+      if !sites[i] or !polygons[i].length or sites[i].boundary => continue
       [weight,min] = [Math.sqrt(sites[i].weight), -1]
       for j from 0 til polygons[i].length =>
         [p,q] = [polygons[i][j], polygons[i][(j + 1) % polygons[i].length]]
         distance = Math.abs(
           ((q.y - p.y) * sites[i].x - (q.x - p.x) * sites[i].y + q.x * p.y - q.y * p.x) /
           Math.sqrt((q.y - p.y) ** 2 + (q.x - p.x) ** 2)
-        )
+        ) * 1.5
         if min == -1 or min > distance => min = distance
       weight = Math.min(weight, min) ** 2
       sites[i].weight = weight
@@ -83,7 +85,9 @@ Voronoi.Boundmap.prototype = do
       if !sites[i] or !polygons[i].length or sites[i].boundary => continue
       target-area = areasum * sites[i].value / valuesum
       current-area = Polygon.area polygons[i]
-      weight = Math.sqrt(sites[i].weight) * target-area / current-area
+      weight = Math.sqrt(sites[i].weight)
+      new-weight = Math.sqrt(sites[i].weight) * target-area / current-area
+      weight = 0.1 * ( new-weight - weight ) + weight # * 0.1 to smooth weight adoption
       min = -1
       for j from 0 til centroids.length - 4 =>
         if i == j or !@polygons[j] => continue

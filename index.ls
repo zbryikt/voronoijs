@@ -44,7 +44,7 @@ render = ->
         if sites[i] and sites[i].lv == 0 => return 5 else 1
     .on \mouseover, -> d3.select(@).attr fill: "rgba(0,0,0,0.5)"
     .on \mouseout, -> d3.select(@).attr fill: "rgba(0,0,0,0.1)"
-  svg.selectAll \circle.site .data sites
+  svg.selectAll \circle.site .data(sites.filter (d,i) -> polygons[i].length and !d.boundary)
     ..enter!append \circle .attr class: \site
     ..exit!remove!
   svg.selectAll \circle.site
@@ -69,7 +69,7 @@ render = ->
 
 makedata = (lv = 0) ->
   len = parseInt(Math.random! * 15) + 2
-  if lv >= 2 => return {value: (Math.random!*200 + 30), name: Math.random!}
+  if lv >= 2 => return {value: (parseInt(Math.random!*2)*100 + 30), name: Math.random!}
   children = [makedata(lv + 1) for i from 0 til len]
   value = children.reduce(((a,b) -> a + b.value),0)
   return {children, value}
