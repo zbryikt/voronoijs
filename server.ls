@@ -248,30 +248,38 @@ update-file = ->
 
   if type == \other => return
   if type == \ls =>
-    if /src\/ls/.exec src =>
+    if /src\/ls\/lib/.exec src =>
       try
-        des = src.replace(/src\/ls/, "static/js").replace(/\.ls$/, ".js")
-        try
-          mkdir-recurse path.dirname(des)
-          fs.write-file-sync(
-            des,
-            uglify.minify(lsc.compile(fs.read-file-sync(src)toString!,{bare:true}),{fromString:true}).code
-          )
-          console.log "[BUILD] #src --> #des"
-        catch
-          console.log "[BUILD] #src failed: "
-          console.log e.message
-        return
-
-        files = fs.readdir-sync \src/ls/ .map -> "src/ls/#it"
+        order = <[voronoi.ls polygon.ls face.ls convex.ls]> # in reversed order.
+        files = fs.readdir-sync \src/ls/lib/ 
+        files.sort (a,b) -> order.indexOf(a) - order.indexOf(b)
+        files = files.map -> "src/ls/lib/#it"
         files = files.filter -> (/\/\./.exec it) == null
-        result = [uglify.minify(lsc.compile(fs.read-file-sync(file)toString!,{bare:true}),{fromString:true}).code for file in files].join("")
-        fs.write-file-sync "build.min.js", result
-        console.log "[BUILD] #src --> build.min.js"
+        des = \dist/voronoi.min.js
+        mkdir-recurse path.dirname(des)
+        result = [uglify.minify(
+          lsc.compile(fs.read-file-sync(file)toString!,{bare:true}),
+          {fromString:true}
+        ).code for file in files].join("")
+        fs.write-file-sync des, result
+        console.log "[BUILD] #src --> voronoi.min.js"
       catch
         console.log "[BUILD] #src failed: "
         console.log e.message
       return
+    else if /src\/ls/.exec src =>
+      des = src.replace(/src\/ls/, "static/js").replace(/\.ls$/, ".js")
+      try
+        mkdir-recurse path.dirname(des)
+        fs.write-file-sync(
+          des,
+          uglify.minify(lsc.compile(fs.read-file-sync(src)toString!,{bare:true}),{fromString:true}).code
+        )
+        console.log "[BUILD] #src --> #des"
+      catch
+        console.log "[BUILD] #src failed: "
+        console.log e.message
+      retrun
     else =>
       des = src.replace /\.ls$/, ".js"
       try
