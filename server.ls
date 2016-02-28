@@ -279,7 +279,7 @@ update-file = ->
       catch
         console.log "[BUILD] #src failed: "
         console.log e.message
-      retrun
+      return
     else =>
       des = src.replace /\.ls$/, ".js"
       try
