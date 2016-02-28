@@ -19,7 +19,7 @@ Polygon.area = (p) ->
   ).reduce(((a,b) -> a + b/2), 0)
 
 Polygon.intersect = (ply1, ply2) ->
-  hit = false
+  if !ply1 or !ply1.length => return []
   cx1 = ply1.reduce(((a,b)-> a + b.x),0) / ply1.length
   cy1 = ply1.reduce(((a,b)-> a + b.y),0) / ply1.length
   for i from 0 til ply1.length =>
