@@ -51,8 +51,8 @@ Voronoi.random-site = (count, width, height, weight) ->
 
 Voronoi.Boundmap.prototype = do
   clip: ->
-    @polygons = @powerbox.convex.polygons.map ~> Voronoi.Polygon.intersect @omega, it
-    @centroids = @polygons.map -> Voronoi.Polygon.center it
+    @polygons = @powerbox.convex.polygons.map ~> if it => Voronoi.Polygon.intersect @omega, it else []
+    @centroids = @polygons.map -> if it => Voronoi.Polygon.center it else {x: null, y: null}
   adopt-pos: ->
     {sites,centroids,polygons} = @{sites, centroids, polygons}
     for i from 0 til centroids.length - 4 =>
@@ -69,7 +69,8 @@ Voronoi.Boundmap.prototype = do
         if min == -1 or min > distance => min = distance
       weight = Math.min(weight, min) ** 2
       sites[i].weight = weight
-  reset-weight: -> @sites.for-each (d,i) ~> d.weight = d.pvalue = d.value
+  reset-weight: ->
+    @sites.for-each (d,i) ~> d.weight = d.pvalue = d.value
   adopt-weight: ->
     {sites,centroids,polygons} = @{sites, centroids, polygons}
     valuesum = 0
@@ -84,8 +85,8 @@ Voronoi.Boundmap.prototype = do
       current-area = Polygon.area polygons[i]
       weight = Math.sqrt(sites[i].weight) * target-area / current-area
       min = -1
-      for j from 0 til centroids.length =>
-        if i == j => continue
+      for j from 0 til centroids.length - 4 =>
+        if i == j or !@polygons[j] => continue
         d = Math.sqrt((centroids[j].x - sites[i].x) ** 2 + (centroids[j].y - sites[i].y) ** 2)
         if min == -1 or min > d => min = d
       weight = Math.min(weight, min) ** 2

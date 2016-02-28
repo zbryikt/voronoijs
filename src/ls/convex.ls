@@ -65,7 +65,7 @@ Voronoi.Convex.prototype <<< do
   grid: ->
     @faces.list.for-each -> it <<< {center: it.get-center!}
     @faces.list = @faces.list.filter -> !it.removed and it.front(it.center)
-    @polygons = []
+    @polygons = [[] for i from 0 til @pts.length]
     for p in @pts => p.visited = false
     visited = []
     for face in @faces.list =>
@@ -79,7 +79,7 @@ Voronoi.Convex.prototype <<< do
         polygon.cx = polygon.reduce(((a,b) -> a + b.x),0) / polygon.length
         polygon.cy = polygon.reduce(((a,b) -> a + b.y),0) / polygon.length
         if @pts[p].boundary => polygon.boundary = true
-        @polygons.push polygon
+        @polygons[p] = polygon
     #console.log @e1, @e2, @e3
 
   calculate: -> 
