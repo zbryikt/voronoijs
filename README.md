@@ -1,32 +1,57 @@
-template
-========
+Voronoi.js
+----------
 
-a web template, for simple frontend. it contains a simple webserver, watch daemon, and a makefile for offline building. It uses jade, styl and livescript to build a web page.
+![Voronoi Treemap Example](http://raw.githubusercontent.com/zbryikt/voronoijs/master/assets/img/example.png)
+
+Voronoi.js is a Voronoi generator in JavaScript. [Demonstration](http://zbryikt.github.io/voronoijs/)
 
 
 Usage
-========
+==========
 
-Simply edit index.jade, index.styl and index.ls, and type 'make' to build these into index.html, index.css and index.js.
+Include [voronoi.min.js](http://raw.githubusercontent.com/zbryikt/voronoijs/master/dist/voronoi.min.js):
 
-You can also watch all your changes and build them automatically. To do so, run
+    <script type="text/javascript" src="voronoi.min.js"></script>
 
-    npm i
+then, prepare your data:
 
-once (for installing all dependencies), then run
+    var data = {
+      children: [
+        {value: 100},
+        {value: 200},
+        {value: 300}
+      ],
+    };
 
-    npm start
+and initialize a voronoi treemap instance:
 
-It will start watching all styl, jade and livescript changes, and also run a simple web server listening on localhost:9999.
+    var width = 800, height = 600;
+    var treemap = new Voronoi.Treemap(data, Polygon.create(width, height, 100), width, height);
+
+compute and render your treemap as your wish:
+ 
+    setInterval(function() {
+      treemap.compute();
+      render();
+    }, 100);
+
+    function render() {
+      var polygons = treemap.getPolygons(); /* Polygons for treemap */
+      var sites = treemap.getSites(); /* correspond to every data node */
+    }
+
+here we have polygons as point array, for example, a triangle:
+
+    [{x: 0, y: 0}, {x: 100, y: 100}, {x: 200, y: 100}]
 
 
-Configuration
-========
+and coordinates in data nodes:
 
-Options about CDN, Open Graph, Favicon, thumbnail and used libraries are available in index.jade:
+    {value: 100, x: 23.4849230, y: 123: 12671238, lv: 0}, ...
 
-    - var use = { cdn: false, og: false, favicon: true }
-    - var lib = { jquery: true, d3js: false, angular: true, bootstrap: true, semantic: false }
-    - var assets = "assets"
-    - var thumbnail = "thumbnail.png"
-    - var favicon = "thumbnail.png"
+You can use _lv_ to determine depth of the node.
+
+
+License
+==========
+[MIT License.](http://raw.githubusercontent.com/zbryikt/voronoi.js/master/LICENSE)

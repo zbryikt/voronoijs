@@ -8,7 +8,7 @@ svg = d3.select \#svg
   .attr do
     width: "#{width}px"
     height: "#{height}px"
-    viewBox: [0,0,width,height].join(" ")
+    viewBox: [-10,-10,width + 20,height + 20].join(" ")
   .on \mousemove, ->
     [x, y] = [d3.event.clientX - box.left, d3.event.clientY - box.top]
     float-site = {x, y, weight: 30, value: 30}
@@ -17,7 +17,7 @@ svg = d3.select \#svg
     [x, y] = [d3.event.clientX - box.left, d3.event.clientY - box.top]
     boundmap.sites.push {x, y, weight: 30, value: 30}
 
-colors = d3.scale.ordinal!range <[ #8c2243 #b22f60 #2957aa #46d9cd #34a491 #65ac36 #8e7d2f #d8a62a #b6802a #8a4f36 #b65244]>
+colors = d3.scale.ordinal!range <[#f381cf #c775e1 #907bdb #81b1da #a9e0ea #8ebc1a #e3a735 #d47b11 #c34128]>
 
 render = ->
   xscale = d3.scale.linear!domain [0,width] .range [0,width]
@@ -37,8 +37,8 @@ render = ->
       fill: (d,i) -> 
         if sites[i] and sites[i].lv == 0 => 
           rgb = d3.rgb(colors sites[i].value)
-          "rgba(#{rgb.r},#{rgb.g},#{rgb.b},0.5)"
-        else "rgba(0,0,0,0.2)"
+          "rgba(#{rgb.r},#{rgb.g},#{rgb.b},1.0)"
+        else "rgba(0,0,0,0.0)"
       stroke: (d,i) -> \#000
       "stroke-width": (d,i) ->
         if sites[i] and sites[i].lv == 0 => return 5 else 1
@@ -69,6 +69,7 @@ render = ->
 
 makedata = (lv = 0) ->
   len = parseInt(Math.random! * 8) + 2
+  if lv == 0 => len = 8
   if lv >= 3 => return {value: (parseInt(Math.random!*2)*100 + 30), name: Math.random!}
   children = [makedata(lv + 1) for i from 0 til len]
   value = children.reduce(((a,b) -> a + b.value),0)
