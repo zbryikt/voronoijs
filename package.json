@@ -1,12 +1,12 @@
 {
   "author": "Kirby Wu",
-  "name": "template",
-  "description": "simple, quick template for bootstrap a page",
+  "name": "voronoijs",
+  "description": "a JavaScript Voronoi Treemap implementation",
   "version": "0.0.1",
-  "homepage": "https://github.com/zbryikt/template",
+  "homepage": "https://github.com/zbryikt/voronoijs",
   "repository": {
     "type": "git",
-    "url": "https://github.com/zbryikt/template"
+    "url": "https://github.com/zbryikt/voronoijs"
   },
   "engines": {
     "node": ">=0.12.6",
