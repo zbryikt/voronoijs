@@ -1,7 +1,7 @@
 Voronoi.js
 ----------
 
-![Voronoi Treemap Example](http://raw.githubusercontent.com/zbryikt/voronoijs/master/assets/img/example.png)
+![Voronoi Treemap Example](http://raw.githubusercontent.com/zbryikt/voronoijs/master/img/example.png)
 
 Voronoi.js is a Voronoi generator in JavaScript. [Demonstration](http://zbryikt.github.io/voronoijs/)
 
