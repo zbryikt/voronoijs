@@ -43,14 +43,16 @@ html(lang="en")
     meta(name="keywords",content=og.keyword)
     +css('https://fonts.googleapis.com/css?family=Lato:300,700')
     +css("/assets/lib/bootstrap/main/css/bootstrap.min.css")
+    +css("/assets/lib/bootstrap.ldui/main/bootstrap.ldui.min.css")
     +css("css/index.css")
   body
     #root
       h1.text-center Voronoi.js
       .text-center a simple, fast and open sourced implementation of Voronoi treemap on web.
       br
-      #demonstration
-        svg#svg(preserveAspectRatio="xMidYMid")
+      .w-640.mx-auto.rwd
+        #demonstration.aspect-ratio(style="padding-top:66%"): .w-100.h-100
+          svg#svg(width="100%",height="100%",preserveAspectRatio="xMidYMid")
       br
       .text-center: a(href="http://github.com/zbryikt/voronoijs",target="_blank") check it out on Github
       hr

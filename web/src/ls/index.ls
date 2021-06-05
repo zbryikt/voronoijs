@@ -4,8 +4,6 @@ width = box.width
 height = box.height
 svg = d3.select \#svg
   .attr do
-    width: "#{width}px"
-    height: "#{height}px"
     viewBox: [-10,-10,width + 20,height + 20].join(" ")
   .on \mousemove, ->
     [x, y] = [d3.event.clientX - box.left, d3.event.clientY - box.top]
@@ -79,8 +77,8 @@ render = ->
 makedata = (lv = 0) ->
   len = parseInt(Math.random! * 8) + 2
   if lv == 0 => len = 8
-  if lv == 1 => len = 4
-  if lv == 2 => len = 4
+  if lv == 1 => len = 3
+  if lv == 2 => len = 3
   if lv >= 3 => return {value: (parseInt(Math.random!*2)*100 + 30), name: Math.random!}
   children = [makedata(lv + 1) for i from 0 til len]
   value = children.reduce(((a,b) -> a + b.value),0)
