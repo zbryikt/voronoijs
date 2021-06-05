@@ -1,0 +1,27 @@
+<!DOCTYPE html><html lang="en"><head prefix="og: http://ogp.me/ns#"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Voronoi.js</title><meta property="og:locale" content="zh_TW"><meta property="og:image"><meta property="og:image:type" content="image/png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:site" content="@zbryikt"><meta name="twitter:domain" content="zbryikt.github.io"><meta name="twitter:url" content="http://zbryikt.github.io/voronoijs/"><meta name="twitter:creator" content="@zbryikt"><meta name="twitter:title" content="Voronoi.js"><meta name="twitter:description" content="Voronoi Treemap Generator in JavaScript"><meta name="twitter:image:src" content="http://zbryikt.github.io/voronoijs/img/thumbnail.png"><meta property="og:title" content="Voronoi.js"><meta property="og:type" content="article"><meta property="og:url" content="http://zbryikt.github.io/voronoijs/"><meta property="og:image" content="http://zbryikt.github.io/voronoijs/img/thumbnail.png"><meta property="og:description" content="Voronoi Treemap Generator in JavaScript"><meta property="og:article:author" content="zbryikt"><meta property="og:article:section" content="Taiwan"><meta name="keywords" content="zbryikt,voronoi"><link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Lato:300,700"><link rel="stylesheet" type="text/css" href="/assets/lib/bootstrap/main/css/bootstrap.min.css"><link rel="stylesheet" type="text/css" href="css/index.css"></head><body><div id="root"><h1 class="text-center">Voronoi.js</h1><div class="text-center">a simple, fast and open sourced implementation of Voronoi treemap on web.</div><br><div id="demonstration"><svg id="svg" preserveAspectRatio="xMidYMid"></svg></div><br><div class="text-center"><a href="http://github.com/zbryikt/voronoijs" target="_blank">check it out on Github</a></div><hr><div id="usage"><h2>Usage</h2><br><p>First, include <code><a href="http://zbryikt.github.io/voronoijs/dist/voronoi.min.js">voronoi.min.js</a></code>:</p><pre class="well">&#60;script type="text/javascript" src="voronoi.min.js&#62;&#60;/script&#62;
+</pre><p>initialization: </p><pre class="well">var width = 800, height = 600;
+var data = {
+  children: [
+    {children: [ {value: 100}, {value: 200}, {value: 300} ]},
+    {children: [ {value: 100}, {value: 500}, {value: 900} ]}
+  ]
+};
+var clip = Voronoi.Polygon.create(width, height, 20);
+var treemap = new Voronoi.Treemap(data, clip, width, height);
+</pre><p>update and render:</p><pre class="well">setInterval(function() {
+  treemap.compute();
+  render();
+}, 100);
+</pre><p>Sample renderer with d3.js:</p><pre class="well">/* render polygons */
+d3.selectAll("path").data(treemap.getPolygons())
+.enter().append("path").attr({
+  d: function(it) { ... }
+});
+
+/* render centroid of polygons */
+d3.selectAll("circle").data(treemap.getSites())
+.enter().append("circle").attr({
+  cx: function(it) { return it.x; },
+  cy: function(it) { return it.y; },
+  r: function(it) { return Math.sqrt(it.value); }
+});</pre><h3>Sites</h3><p>You can use these generated attributes in your data to determine how to render:</p><ul><li><code>x</code>: x coordinate</li><li><code>y</code>: y coordinate</li><li><code>lv</code>: depth of node in treemap</li></ul><h3>Polygons</h3><p>Polygon is a point array. For example, a triangle:</p><pre class="well">[{x: 0, y: 0}, {x: 100, y: 100}, {x: 200, y: 0}]</pre><p>Use Voronoi.Polygon.create to quickly generate a N side regular polygon:</p><pre class="well">var clipPolygon = Voronoi.Polygon.create(width, height, N);</pre><p>and use it in Voronoi treemap to indicate the clipping region of the whole treemap:</p><pre class="well">var voronoi = new Voronoi.Treemap(data, clipPolygon, width, height);</pre><br><hr><h2>Note</h2><p>This library is implemented base on this publication:</p><blockquote><p>Arlind Nocaj and Ulrik Brandes, "Computing Voronoi TreemapsFaster, Simpler, and Resolution-independent", Eurographics Conference on Visualization (EuroVis) 2012</p></blockquote><br><hr><h2>Author</h2><p>Kirby T. Wu ( follow on <a href="http://twitter.com/zbryikt">twitter</a> )</p><br><hr><h2>License</h2><p>voronoi.js is released under <a href="https://raw.githubusercontent.com/zbryikt/voronoijs/master/LICENSE" target="_blank">MIT License</a>.</p><br><br><hr><div class="text-right" id="footer"><a href="http://github.com/zbryikt/voronoijs">Github</a><a href="http://twitter.com/zbryikt">#zbryikt</a><a href="http://zbryikt.github.io/visualize">Vis Projects</a></div><br><br></div></div><script type="text/javascript" src="assets/lib/@zbryikt/voronoijs/dev/voronoi.min.js"></script><script type="text/javascript" src="https://d3js.org/d3.v3.js"></script><script type="text/javascript" src="js/index.js"></script></body></html>

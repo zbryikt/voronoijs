@@ -1,6 +1,4 @@
 
-<- $ document .ready
-
 box = document.getElementById(\demonstration).getBoundingClientRect!
 width = box.width
 height = box.height
@@ -94,14 +92,14 @@ c2 = children: [ { value: 31 }, { value: 32 }, { value: 2003 } ], value: 2066
 testdata = children: [c1,c2], value: 8072
 
 if true =>
-  treemap = new Voronoi.Treemap( data, Polygon.create(width, height, 100), width, height )
+  treemap = new voronoi.Treemap( data, voronoi.Polygon.create(width, height, 100), width, height )
   <- setInterval _, 50
   treemap.compute!
   render!
 if false =>
-  boundmap = new Voronoi.Boundmap(
-    Voronoi.random-site(10, width, height, 500)
-    Voronoi.Polygon.create(width, height, 10)
+  boundmap = new voronoi.Boundmap(
+    voronoi.random-site(10, width, height, 500)
+    voronoi.Polygon.create(width, height, 10)
     width
     height
   )

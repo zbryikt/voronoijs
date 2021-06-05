@@ -1,6 +1,7 @@
 {
-  "author": "Kirby Wu",
-  "name": "voronoijs",
+  "author": "zbryikt",
+  "name": "@zbryikt/voronoijs",
+  "license": "MIT",
   "description": "a JavaScript Voronoi Treemap implementation",
   "version": "0.0.1",
   "homepage": "https://github.com/zbryikt/voronoijs",
@@ -9,19 +10,37 @@
     "url": "https://github.com/zbryikt/voronoijs"
   },
   "engines": {
-    "node": ">=0.12.6",
-    "npm": ">=1.2.2"
+    "node": ">=10.14.1",
+    "npm": ">=6.4.1"
   },
   "scripts": {
-    "start": "node_modules/.bin/lsc server.ls",
-    "restart": "node_modules\\.bin\\lsc server.ls",
-    "prepare": "npm install chokidar@0.8.0"
+    "start": "npx server -r web -o true",
+    "postinstall": "npx fedep"
   },
-  "dependencies": {
-    "LiveScript": ">=1.2.0",
-    "jade": "=1.11.0",
-    "chokidar": "=1.0.3",
-    "stylus": "=0.50.0",
-    "uglify-js": "=2.4.16"
+  "devDependencies": {
+    "@loadingio/ldquery": "^2.0.0",
+    "@loadingio/loading.css": "^2.0.1",
+    "@plotdb/layout": "^0.0.8",
+    "bootstrap": "^4.5.2",
+    "bootstrap.ldui": "github:loadingio/bootstrap.ldui",
+    "fedep": "^0.0.12",
+    "ldloader": "^1.2.0",
+    "ldview": "^0.0.2",
+    "livescript": "^1.6.0",
+    "template": "github:zbryikt/template#v2.3.13",
+    "uglify-js": "=3.2.0",
+    "uglifycss": "^0.0.29"
+  },
+  "frontendDependencies": {
+    "root": "web/static/assets/lib",
+    "modules": [
+      "bootstrap",
+      "bootstrap.ldui",
+      "@loadingio/ldquery",
+      "@loadingio/loading.css",
+      "@plotdb/layout",
+      "ldloader",
+      "ldview"
+    ]
   }
 }

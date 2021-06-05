@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+rm -rf dist
+mkdir -p dist
+
+cat src/voronoi.ls src/convex.ls src/face.ls src/polygon.ls src/exports.ls > dist/voronoi.ls
+
+echo "build src/voronoi.ls -> dist/voronoi.js ..."
+npx lsc -cp --no-header dist/voronoi.ls > dist/voronoi.js
+echo "minifying voronoi.js ..."
+npx uglifyjs dist/voronoi.js > dist/voronoi.min.js
+
+rm dist/voronoi.ls
+
+echo "copy files to web ..."
+rm -rf web/static/assets/lib/@zbryikt/voronoijs/dev
+mkdir -p web/static/assets/lib/@zbryikt/voronoijs/dev
+cp dist/* web/static/assets/lib/@zbryikt/voronoijs/dev
+echo "done."

@@ -1,13 +1,11 @@
-Voronoi.js
-----------
+# Voronoi.js
 
 ![Voronoi Treemap Example](http://zbryikt.github.io/voronoijs/img/example.png)
 
 Voronoi.js is a Voronoi treemap generator in JavaScript. [Demonstration](http://zbryikt.github.io/voronoijs/)
 
 
-Usage
-==========
+## Usage
 
 Include [voronoi.min.js](http://raw.githubusercontent.com/zbryikt/voronoijs/master/dist/voronoi.min.js):
 
@@ -52,6 +50,7 @@ and coordinates in data nodes:
 You can use _lv_ to determine depth of the node.
 
 
-License
-==========
+## License
+
 [MIT License.](http://raw.githubusercontent.com/zbryikt/voronoijs/master/LICENSE)
+

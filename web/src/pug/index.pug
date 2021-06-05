@@ -1,34 +1,49 @@
 doctype html
-//- basic libraries: jquery(1.10.2), d3js(3.5.4), angularjs(1.2.3), bootstrap(3.0)/semantic-ui(0.9.3/0.9.5)
-//-                  fontawesome(4.4.0), reactjs(0.14.0)
-- var use = { cdn: true, og: true, favicon: true }
-- var lib = { jquery: true, d3js: true, angular: true, bootstrap: true, semantic: false, fontawesome: true, reactjs: false }
-- var assets = "assets"
-- var favicon = "http://zbryikt.github.io/voronoijs/img/favicon.png"
-- var title = "Voronoi.js"
-- var og = {}
-- og.title = title
-- og.twitter = {type: "summary_large_image", site: "@zbryikt", creator: "@zbryikt"}
-- og.domain = "zbryikt.github.io"
-- og.url = "http://zbryikt.github.io/voronoijs/"
-- og.thumbnail = {width: 1200, height: 630, type: "image/png"}
-- og.thumbnail.url = "http://zbryikt.github.io/voronoijs/img/thumbnail.png"
-- og.author = "zbryikt"
-- og.section = "Taiwan"
-- og.keyword = "zbryikt,voronoi"
-- og.description = "Voronoi Treemap Generator in JavaScript"
+-
+  var og = {
+    title: "Voronoi.js",
+    twitter: {type: "summary_large_image", site: "@zbryikt", creator: "@zbryikt"},
+    domain: "zbryikt.github.io",
+    url: "http://zbryikt.github.io/voronoijs/",
+    thumbnail: {
+      width: 1200, height: 630, type: "image/png",
+      url: "http://zbryikt.github.io/voronoijs/img/thumbnail.png"
+    },
+    author: "zbryikt",
+    section: "Taiwan",
+    keyword: "zbryikt,voronoi",
+    description: "Voronoi Treemap Generator in JavaScript"
+  }
 html(lang="en")
+  include @/bootstrap.ldui/dist/index.pug
   head(prefix="og: http://ogp.me/ns#")
     meta(charset="utf-8")
     meta(name='viewport', content='width=device-width, initial-scale=1.0')
-    title= title
-    // libraries
-    include library.jade
-    // custom files
-    link(href='https://fonts.googleapis.com/css?family=Lato:300,700',rel='stylesheet',type='text/css')
-    link(rel="stylesheet",type="text/css",href="static/css/index.css")
-    script(type="text/javascript",src="dist/voronoi.min.js")
-    script(type="text/javascript",src="static/js/index.js")
+    title= og.title
+    meta(property="og:locale",content="zh_TW")
+    meta(property="og:image",content=thumbnail)
+    meta(property="og:image:type",content="image/png")
+    meta(property="og:image:width",content=og.thumbnail.width)
+    meta(property="og:image:height",content=og.thumbnail.height)
+    meta(name="twitter:card",content=og.twitter.type)
+    meta(name="twitter:site",content=og.twitter.site)
+    meta(name="twitter:domain",content=og.domain)
+    meta(name="twitter:url",content=og.url)
+    meta(name="twitter:creator",content=og.twitter.creator)
+    meta(name="twitter:title",content=og.title)
+    meta(name="twitter:description",content=og.description)
+    meta(name="twitter:image:src",content=og.thumbnail.url)
+    meta(property="og:title",content=og.title)
+    meta(property="og:type",content="article")
+    meta(property="og:url",content=og.url)
+    meta(property="og:image",content=og.thumbnail.url)
+    meta(property="og:description",content=og.description)
+    meta(property="og:article:author",content=og.author)
+    meta(property="og:article:section",content=og.section)
+    meta(name="keywords",content=og.keyword)
+    +css('https://fonts.googleapis.com/css?family=Lato:300,700')
+    +css("/assets/lib/bootstrap/main/css/bootstrap.min.css")
+    +css("css/index.css")
   body
     #root
       h1.text-center Voronoi.js
@@ -120,3 +135,6 @@ html(lang="en")
           a(href="http://zbryikt.github.io/visualize") Vis Projects
         br
         br
+    +script("assets/lib/@zbryikt/voronoijs/dev/voronoi.min.js")
+    +script("https://d3js.org/d3.v3.js")
+    +script("js/index.js")
