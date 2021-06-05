@@ -3,8 +3,6 @@ box = document.getElementById('demonstration').getBoundingClientRect();
 width = box.width;
 height = box.height;
 svg = d3.select('#svg').attr({
-  width: width + "px",
-  height: height + "px",
   viewBox: [-10, -10, width + 20, height + 20].join(" ")
 }).on('mousemove', function(){
   var ref$, x, y, floatSite;
@@ -139,10 +137,10 @@ makedata = function(lv){
     len = 8;
   }
   if (lv === 1) {
-    len = 4;
+    len = 3;
   }
   if (lv === 2) {
-    len = 4;
+    len = 3;
   }
   if (lv >= 3) {
     return {
