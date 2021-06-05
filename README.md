@@ -1,6 +1,6 @@
 # Voronoi.js
 
-![Voronoi Treemap Example](http://zbryikt.github.io/voronoijs/img/example.png)
+![Voronoi Treemap Example](http://zbryikt.github.io/voronoijs/assets/img/example.png)
 
 Voronoi.js is a Voronoi treemap generator in JavaScript. [Demonstration](http://zbryikt.github.io/voronoijs/)
 
