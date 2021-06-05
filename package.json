@@ -4,6 +4,9 @@
   "license": "MIT",
   "description": "a JavaScript Voronoi Treemap implementation",
   "version": "0.0.1",
+  "files": [
+    "dist/**/*"
+  ],
   "homepage": "https://github.com/zbryikt/voronoijs",
   "repository": {
     "type": "git",
