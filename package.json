@@ -15,7 +15,7 @@
   },
   "scripts": {
     "start": "npx server -r web -o true",
-    "postinstall": "npx fedep"
+    "deploy": "npx deploy web/static"
   },
   "devDependencies": {
     "@loadingio/ldquery": "^2.0.0",
@@ -23,6 +23,7 @@
     "@plotdb/layout": "^0.0.8",
     "bootstrap": "^4.5.2",
     "bootstrap.ldui": "github:loadingio/bootstrap.ldui",
+    "deploy": "github:zbryikt/deploy",
     "fedep": "^0.0.12",
     "ldloader": "^1.2.0",
     "ldview": "^0.0.2",
