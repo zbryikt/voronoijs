@@ -15,7 +15,7 @@ doctype html
     description: "Voronoi Treemap Generator in JavaScript"
   }
 html(lang="en")
-  include @/bootstrap.ldui/dist/index.pug
+  include @/@loadingio/bootstrap.ext/index.pug
   head(prefix="og: http://ogp.me/ns#")
     meta(charset="utf-8")
     meta(name='viewport', content='width=device-width, initial-scale=1.0')
@@ -42,8 +42,8 @@ html(lang="en")
     meta(property="og:article:section",content=og.section)
     meta(name="keywords",content=og.keyword)
     +css('https://fonts.googleapis.com/css?family=Lato:300,700')
-    +css("/assets/lib/bootstrap/main/css/bootstrap.min.css")
-    +css("/assets/lib/bootstrap.ldui/main/bootstrap.ldui.min.css")
+    +css("/assets/lib/bootstrap/main/dist/css/bootstrap.min.css")
+    +css("/assets/lib/@loadingio/bootstrap.ext/main/index.min.css")
     +css("css/index.css")
   body
     #root
@@ -137,6 +137,6 @@ html(lang="en")
           a(href="http://zbryikt.github.io/visualize") Vis Projects
         br
         br
-    +script("assets/lib/@zbryikt/voronoijs/dev/voronoi.min.js")
+    +script("assets/lib/@zbryikt/voronoijs/dev/index.min.js")
     +script("https://d3js.org/d3.v3.js")
     +script("js/index.js")
