@@ -1,2 +1,2 @@
 if module? => module.exports = Voronoi
-if window? => window.voronoi = Voronoi
+else if window? => window.voronoi = Voronoi

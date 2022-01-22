@@ -788,8 +788,7 @@
   };
   if (typeof module != 'undefined' && module !== null) {
     module.exports = Voronoi;
-  }
-  if (typeof window != 'undefined' && window !== null) {
+  } else if (typeof window != 'undefined' && window !== null) {
     window.voronoi = Voronoi;
   }
   function import$(obj, src){
