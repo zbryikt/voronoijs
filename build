@@ -4,10 +4,10 @@ mkdir -p dist
 
 cat src/voronoi.ls src/convex.ls src/face.ls src/polygon.ls src/exports.ls > dist/voronoi.ls
 
-echo "build src/voronoi.ls -> dist/voronoi.js ..."
-./node_modules/.bin/lsc -cp --no-header dist/voronoi.ls > dist/voronoi.js
+echo "build src/voronoi.ls -> dist/index.js ..."
+./node_modules/.bin/lsc -cp --no-header dist/voronoi.ls > dist/index.js
 echo "minifying voronoi.js ..."
-./node_modules/.bin/uglifyjs dist/voronoi.js -m -c > dist/voronoi.min.js
+./node_modules/.bin/uglifyjs dist/index.js -m -c > dist/index.min.js
 
 rm dist/voronoi.ls
 
