@@ -4,6 +4,8 @@
   "license": "MIT",
   "description": "a JavaScript Voronoi Treemap implementation",
   "version": "0.0.1",
+  "browser": "dist/index.min.js",
+  "main": "dist/index.min.js",
   "files": [
     "dist/**/*"
   ],
